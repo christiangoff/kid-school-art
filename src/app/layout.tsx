@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { currentUser } from "@/lib/session";
+import { unseenTagCount } from "@/lib/sharing";
 import { logoutAction } from "./actions";
 import "./globals.css";
 
@@ -11,6 +12,7 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const user = await currentUser();
+  const unseen = user ? unseenTagCount(user.id) : 0;
   return (
     <html lang="en">
       <body className="min-h-screen font-sans antialiased">
@@ -20,8 +22,16 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               <span aria-hidden>🖍️</span> Kid School Art
             </Link>
             {user && (
-              <form action={logoutAction} className="flex items-center gap-3 text-sm">
-                <span className="text-muted">{user.name}</span>
+              <form action={logoutAction} className="flex items-center gap-4 text-sm">
+                <Link href="/for-you" className="flex items-center gap-1 font-semibold">
+                  For you
+                  {unseen > 0 && (
+                    <span className="rounded-full bg-brand px-1.5 text-xs text-white" aria-label={`${unseen} new`}>
+                      {unseen}
+                    </span>
+                  )}
+                </Link>
+                <span className="hidden text-muted sm:inline">{user.name}</span>
                 <button className="font-semibold text-brand hover:text-brand-dark">Sign out</button>
               </form>
             )}

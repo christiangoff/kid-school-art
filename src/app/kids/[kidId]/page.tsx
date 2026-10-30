@@ -44,6 +44,7 @@ export default async function KidPage({ params }: { params: Promise<{ kidId: str
           edit && (
             <>
               <ButtonLink href={`/kids/${kid.id}/collections/new`}>New collection</ButtonLink>
+              <ButtonLink href={`/share/kid/${kid.id}`} variant="secondary">Share</ButtonLink>
               <ButtonLink href={`/kids/${kid.id}/edit`} variant="secondary">Edit</ButtonLink>
             </>
           )

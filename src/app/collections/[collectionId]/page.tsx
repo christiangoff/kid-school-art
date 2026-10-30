@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { ArtGrid } from "@/components/ArtGrid";
 import { collectionDetails } from "@/components/CollectionFields";
 import { ButtonLink, Card, PageHeader } from "@/components/ui";
+import { TagPanel } from "@/components/TagPanel";
 import { Uploader } from "@/components/Uploader";
 import { can } from "@/lib/families";
 import { artFor, collectionsFor, getCollection } from "@/lib/gallery";
@@ -30,7 +31,14 @@ export default async function CollectionPage({ params }: { params: Promise<{ col
             {collection.description && <span className="mt-1 block text-ink">{collection.description}</span>}
           </>
         }
-        actions={edit && <ButtonLink href={`/collections/${collection.id}/edit`} variant="secondary">Edit</ButtonLink>}
+        actions={
+          edit && (
+            <>
+              <ButtonLink href={`/share/collection/${collection.id}`} variant="secondary">Share</ButtonLink>
+              <ButtonLink href={`/collections/${collection.id}/edit`} variant="secondary">Edit</ButtonLink>
+            </>
+          )
+        }
       />
       {edit && (
         <div className="mb-6">
@@ -44,6 +52,9 @@ export default async function CollectionPage({ params }: { params: Promise<{ col
       ) : (
         <ArtGrid art={art} kidId={kid.id} canEdit={edit} collections={others} />
       )}
+      <div className="mt-8 max-w-xl">
+        <TagPanel target={{ collectionId: collection.id }} familyId={kid.familyId} userId={user.id} role={role} />
+      </div>
     </>
   );
 }

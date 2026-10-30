@@ -3,6 +3,7 @@ import { ActionForm, SubmitButton } from "@/components/ActionForm";
 import { Card, Field, Input, PageHeader, Select } from "@/components/ui";
 import {
   createInviteAction,
+  baseUrl,
   removeMemberAction,
   renameFamilyAction,
   revokeInviteAction,
@@ -10,6 +11,8 @@ import {
 } from "@/app/actions";
 import { can, getFamily, membersOf, pendingInvites, ROLE_HELP, ROLE_LABELS, ROLES, type Role } from "@/lib/families";
 import { requireUser } from "@/lib/session";
+import { shareLinks } from "@/lib/sharing";
+import { ShareLinkList } from "@/components/ShareLinkList";
 
 export const dynamic = "force-dynamic";
 
@@ -146,6 +149,16 @@ export default async function FamilySettings({ params }: { params: Promise<{ fam
               </ul>
             </>
           )}
+        </Card>
+      )}
+
+      {can(family.role, "edit") && (
+        <Card>
+          <h2 className="text-lg font-bold">Share links</h2>
+          <p className="mb-4 mt-1 text-sm text-muted">
+            Read-only links for people without an account. Make one from the Share button on a kid, collection, or piece.
+          </p>
+          <ShareLinkList links={shareLinks(family.id)} baseUrl={await baseUrl()} showTarget />
         </Card>
       )}
 

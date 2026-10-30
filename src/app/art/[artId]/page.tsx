@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ActionForm, SubmitButton } from "@/components/ActionForm";
+import { TagPanel } from "@/components/TagPanel";
 import { Card, Field, Input, inputClass, Select } from "@/components/ui";
 import { deleteArtAction, setCoverAction, updateArtAction } from "@/app/actions";
 import { can } from "@/lib/families";
@@ -62,10 +63,13 @@ export default async function ArtPage({ params }: { params: Promise<{ artId: str
             {ageThen && ` · ${ageThen}`}
           </p>
           {art.note && <blockquote className="mt-3 border-l-4 border-brand/40 pl-3 italic">“{art.note}”</blockquote>}
-          <a href={`/art-files/${art.id}/original?download`} className="mt-4 inline-block text-sm font-semibold text-brand">
-            Download original
-          </a>
+          <div className="mt-4 flex gap-4 text-sm font-semibold text-brand">
+            <a href={`/art-files/${art.id}/original?download`}>Download original</a>
+            {edit && <Link href={`/share/art/${art.id}`}>Share a link</Link>}
+          </div>
         </Card>
+
+        <TagPanel target={{ artId: art.id }} familyId={kid.familyId} userId={user.id} role={role} />
 
         {edit && (
           <Card>

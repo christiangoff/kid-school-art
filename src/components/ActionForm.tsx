@@ -23,7 +23,7 @@ export function ActionForm({ action, children, className = "space-y-4" }: {
         </p>
       )}
       {state.message && <p className="rounded-xl bg-green-50 px-3 py-2 text-sm text-green-800">{state.message}</p>}
-      {state.link && <CopyLink link={state.link} />}
+      {state.link && <CopyLink link={state.link} note={state.linkNote} />}
     </form>
   );
 }
@@ -37,17 +37,17 @@ export function SubmitButton({ children, variant }: { children: ReactNode; varia
   );
 }
 
-function CopyLink({ link }: { link: string }) {
+export function CopyLink({ link, note, title = "Send this link to them" }: { link: string; note?: string; title?: string }) {
   return (
     <div className="rounded-xl border border-line bg-paper p-3">
-      <p className="text-sm font-semibold">Send this link to them</p>
+      <p className="text-sm font-semibold">{title}</p>
       <div className="mt-2 flex gap-2">
         <input readOnly value={link} className="min-w-0 flex-1 rounded-lg border border-line bg-white px-2 py-1 text-sm" onFocus={(e) => e.currentTarget.select()} />
         <Button type="button" variant="secondary" onClick={() => navigator.clipboard?.writeText(link)}>
           Copy
         </Button>
       </div>
-      <p className="mt-2 text-xs text-muted">The link works once and expires in 14 days.</p>
+      <p className="mt-2 text-xs text-muted">{note ?? "The link works once and expires in 14 days."}</p>
     </div>
   );
 }

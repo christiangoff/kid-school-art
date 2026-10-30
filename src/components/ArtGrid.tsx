@@ -11,11 +11,14 @@ export type GridArt = { id: number; width: number; height: number; title: string
  * A gallery of thumbnails. Editors can select pieces and move them into a
  * collection, which is how a bulk import gets sorted.
  */
-export function ArtGrid({ art, kidId, collections, canEdit }: {
+export function ArtGrid({ art, kidId, collections, canEdit, linkBase = "/art", imageBase = "/art-files" }: {
   art: GridArt[];
   kidId: number;
   collections?: { id: number; title: string }[];
   canEdit?: boolean;
+  /** Where pieces link to and load from; share links use their own. */
+  linkBase?: string;
+  imageBase?: string;
 }) {
   const [selecting, setSelecting] = useState(false);
   const [selected, setSelected] = useState<number[]>([]);
@@ -71,7 +74,7 @@ export function ArtGrid({ art, kidId, collections, canEdit }: {
           const img = (
             // eslint-disable-next-line @next/next/no-img-element
             <img
-              src={`/art-files/${a.id}/thumb`}
+              src={`${imageBase}/${a.id}/thumb`}
               width={a.width}
               height={a.height}
               alt={a.title ?? "Artwork"}
@@ -95,7 +98,7 @@ export function ArtGrid({ art, kidId, collections, canEdit }: {
                   </span>
                 </button>
               ) : (
-                <Link href={`/art/${a.id}`} className="group block">
+                <Link href={`${linkBase}/${a.id}`} className="group block">
                   <div className="overflow-hidden rounded-xl transition group-hover:shadow-md">{img}</div>
                   {a.title && <p className="mt-1 truncate text-sm">{a.title}</p>}
                 </Link>
