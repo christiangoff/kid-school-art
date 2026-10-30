@@ -20,6 +20,16 @@ import {
   updateMember,
   type Role,
 } from "@/lib/families";
+import {
+  createCollection,
+  deleteArt,
+  deleteCollection,
+  moveArt,
+  setCover,
+  updateArt,
+  updateCollection,
+  type CollectionInput,
+} from "@/lib/gallery";
 import { requireUser, safeNext, signIn, signOut } from "@/lib/session";
 
 export type ActionResult = { error?: string; message?: string; link?: string };
@@ -202,4 +212,89 @@ export async function acceptInviteAction(_: ActionResult, data: FormData): Promi
   });
   if (failed) return failed;
   redirect(`/families/${familyId}`);
+}
+
+// Collections and art
+
+function collectionInput(data: FormData): CollectionInput {
+  return {
+    title: text(data, "title"),
+    school: text(data, "school"),
+    teacher: text(data, "teacher"),
+    grade: text(data, "grade"),
+    schoolYear: text(data, "schoolYear"),
+    description: text(data, "description"),
+  };
+}
+
+export async function createCollectionAction(_: ActionResult, data: FormData): Promise<ActionResult> {
+  const user = await requireUser();
+  let collectionId = 0;
+  const failed = await attempt(() => {
+    collectionId = createCollection(id(data, "kidId"), user.id, collectionInput(data));
+  });
+  if (failed) return failed;
+  redirect(`/collections/${collectionId}`);
+}
+
+export async function updateCollectionAction(_: ActionResult, data: FormData): Promise<ActionResult> {
+  const user = await requireUser();
+  const collectionId = id(data, "collectionId");
+  const failed = await attempt(() => updateCollection(collectionId, user.id, collectionInput(data)));
+  if (failed) return failed;
+  redirect(`/collections/${collectionId}`);
+}
+
+export async function deleteCollectionAction(_: ActionResult, data: FormData): Promise<ActionResult> {
+  const user = await requireUser();
+  let kidId = 0;
+  const failed = await attempt(() => {
+    kidId = deleteCollection(id(data, "collectionId"), user.id);
+  });
+  if (failed) return failed;
+  redirect(`/kids/${kidId}`);
+}
+
+export async function updateArtAction(_: ActionResult, data: FormData): Promise<ActionResult> {
+  const user = await requireUser();
+  const artId = id(data, "artId");
+  const failed = await attempt(() =>
+    updateArt(artId, user.id, {
+      title: text(data, "title"),
+      note: text(data, "note"),
+      madeOn: text(data, "madeOn") || null,
+      collectionId: id(data, "collectionId") || null,
+    }),
+  );
+  if (failed) return failed;
+  revalidatePath(`/art/${artId}`);
+  return { message: "Saved." };
+}
+
+export async function deleteArtAction(_: ActionResult, data: FormData): Promise<ActionResult> {
+  const user = await requireUser();
+  let back = "/";
+  const failed = await attempt(() => {
+    const art = deleteArt(id(data, "artId"), user.id);
+    back = art.collectionId ? `/collections/${art.collectionId}` : `/kids/${art.kidId}`;
+  });
+  if (failed) return failed;
+  redirect(back);
+}
+
+export async function setCoverAction(_: ActionResult, data: FormData): Promise<ActionResult> {
+  const user = await requireUser();
+  const failed = await attempt(() => setCover(id(data, "collectionId"), user.id, id(data, "artId")));
+  if (failed) return failed;
+  revalidatePath(`/art/${id(data, "artId")}`);
+  return { message: "This is now the collection's cover." };
+}
+
+export async function moveArtAction(kidId: number, artIds: number[], collectionId: number | null): Promise<ActionResult> {
+  const user = await requireUser();
+  const failed = await attempt(() => moveArt(kidId, user.id, artIds, collectionId));
+  if (failed) return failed;
+  revalidatePath(`/kids/${kidId}`);
+  if (collectionId) revalidatePath(`/collections/${collectionId}`);
+  return {};
 }
