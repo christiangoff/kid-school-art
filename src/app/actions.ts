@@ -30,6 +30,17 @@ import {
   updateCollection,
   type CollectionInput,
 } from "@/lib/gallery";
+import {
+  createBook,
+  deleteBook,
+  moveBookCollection,
+  setArtIncluded,
+  setBookCover,
+  updateBook,
+  type BookLayout,
+  type BookSettings,
+  type BookSize,
+} from "@/lib/books";
 import { requireUser, safeNext, signIn, signOut } from "@/lib/session";
 import { createShareLink, revokeShareLink, tagMembers, untag, type ShareTarget, type TagTarget } from "@/lib/sharing";
 
@@ -362,5 +373,79 @@ export async function revokeShareLinkAction(_: ActionResult, data: FormData): Pr
   const failed = await attempt(() => revokeShareLink(id(data, "linkId"), user.id));
   if (failed) return failed;
   revalidatePath("/", "layout");
+  return {};
+}
+
+// Books
+
+function bookSettings(data: FormData): BookSettings {
+  return {
+    title: text(data, "title"),
+    subtitle: text(data, "subtitle") || null,
+    size: text(data, "size") as BookSize,
+    layout: text(data, "layout") as BookLayout,
+    bleed: data.get("bleed") === "on",
+    showTitle: data.get("showTitle") === "on",
+    showNote: data.get("showNote") === "on",
+    showDate: data.get("showDate") === "on",
+    dedication: text(data, "dedication") || null,
+  };
+}
+
+export async function createBookAction(_: ActionResult, data: FormData): Promise<ActionResult> {
+  const user = await requireUser();
+  const collectionIds = data.getAll("collectionId").map(Number);
+  if (collectionIds.length === 0) return { error: "Pick at least one collection for the book." };
+  let bookId = 0;
+  const failed = await attempt(() => {
+    bookId = createBook(id(data, "kidId"), user.id, bookSettings(data), collectionIds);
+  });
+  if (failed) return failed;
+  redirect(`/books/${bookId}`);
+}
+
+export async function updateBookAction(_: ActionResult, data: FormData): Promise<ActionResult> {
+  const user = await requireUser();
+  const bookId = id(data, "bookId");
+  const collectionIds = data.getAll("collectionId").map(Number);
+  if (collectionIds.length === 0) return { error: "Pick at least one collection for the book." };
+  const failed = await attempt(() => updateBook(bookId, user.id, bookSettings(data), collectionIds));
+  if (failed) return failed;
+  revalidatePath(`/books/${bookId}`);
+  return { message: "Saved." };
+}
+
+export async function deleteBookAction(_: ActionResult, data: FormData): Promise<ActionResult> {
+  const user = await requireUser();
+  let kidId = 0;
+  const failed = await attempt(() => {
+    kidId = deleteBook(id(data, "bookId"), user.id);
+  });
+  if (failed) return failed;
+  redirect(`/kids/${kidId}`);
+}
+
+export async function bookArtAction(_: ActionResult, data: FormData): Promise<ActionResult> {
+  const user = await requireUser();
+  const bookId = id(data, "bookId");
+  const artId = id(data, "artId");
+  const op = text(data, "op");
+  const failed = await attempt(() => {
+    if (op === "cover") setBookCover(bookId, user.id, artId);
+    else setArtIncluded(bookId, user.id, artId, op === "include");
+  });
+  if (failed) return failed;
+  revalidatePath(`/books/${bookId}`);
+  return {};
+}
+
+export async function moveBookCollectionAction(_: ActionResult, data: FormData): Promise<ActionResult> {
+  const user = await requireUser();
+  const bookId = id(data, "bookId");
+  const failed = await attempt(() =>
+    moveBookCollection(bookId, user.id, id(data, "collectionId"), text(data, "direction") === "up" ? -1 : 1),
+  );
+  if (failed) return failed;
+  revalidatePath(`/books/${bookId}`);
   return {};
 }
