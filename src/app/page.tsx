@@ -23,7 +23,7 @@ export default async function Home() {
       <div className="grid gap-4 sm:grid-cols-2">
         {families.map((f) => (
           <Link key={f.id} href={`/families/${f.id}`}>
-            <Card className="transition hover:shadow-md">
+            <Card className="transition-shadow hover:shadow-md">
               <div className="flex items-center justify-between">
                 <h2 className="text-xl font-bold">{f.name}</h2>
                 <span className="text-xs text-muted">{ROLE_LABELS[f.role]}</span>

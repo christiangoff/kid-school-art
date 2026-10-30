@@ -28,7 +28,7 @@ export default async function EditKid({ params }: { params: Promise<{ kidId: str
       {can(role, "manage") && (
         <Card>
           <h2 className="font-bold">Remove {kid.name}</h2>
-          <p className="mb-3 mt-1 text-sm text-muted">This deletes their page and everything on it. It can't be undone.</p>
+          <p className="mb-3 mt-1 text-sm text-muted">This deletes their page and everything on it. It can’t be undone.</p>
           <ActionForm action={deleteKidAction}>
             <input type="hidden" name="kidId" value={kid.id} />
             <input type="hidden" name="familyId" value={kid.familyId} />

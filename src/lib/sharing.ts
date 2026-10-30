@@ -24,16 +24,16 @@ export type TagItem = {
 function resolveTarget(target: TagTarget | ShareTarget, userId: number) {
   if ("artId" in target) {
     const found = getArt(target.artId, userId);
-    if (!found) throw new FamilyError("That art doesn't exist.");
+    if (!found) throw new FamilyError("That art doesn’t exist.");
     return { familyId: found.kid.familyId, role: found.role };
   }
   if ("collectionId" in target) {
     const found = getCollection(target.collectionId, userId);
-    if (!found) throw new FamilyError("That collection doesn't exist.");
+    if (!found) throw new FamilyError("That collection doesn’t exist.");
     return { familyId: found.kid.familyId, role: found.role };
   }
   const found = getKid(target.kidId, userId);
-  if (!found) throw new FamilyError("That kid doesn't exist.");
+  if (!found) throw new FamilyError("That kid doesn’t exist.");
   return { familyId: found.kid.familyId, role: found.role };
 }
 
@@ -66,7 +66,7 @@ export function tagMembers(target: TagTarget, actorId: number, userIds: number[]
 export function untag(target: TagTarget, actorId: number, userId: number) {
   const { role } = resolveTarget(target, actorId);
   // People can remove their own tags; editors can remove anyone's.
-  if (userId !== actorId && !can(role, "edit")) throw new FamilyError("You don't have permission to do that.");
+  if (userId !== actorId && !can(role, "edit")) throw new FamilyError("You don’t have permission to do that.");
   if ("artId" in target) db().prepare("DELETE FROM tags WHERE user_id = ? AND art_id = ?").run(userId, target.artId);
   else db().prepare("DELETE FROM tags WHERE user_id = ? AND collection_id = ?").run(userId, target.collectionId);
 }
@@ -209,7 +209,7 @@ export function shareLinks(familyId: number, target?: ShareTarget): ShareLink[] 
 
 export function revokeShareLink(linkId: number, actorId: number) {
   const row = db().prepare("SELECT family_id AS f FROM share_links WHERE id = ?").get(linkId) as { f: number } | undefined;
-  if (!row || !can(roleIn(row.f, actorId), "edit")) throw new FamilyError("You don't have permission to do that.");
+  if (!row || !can(roleIn(row.f, actorId), "edit")) throw new FamilyError("You don’t have permission to do that.");
   db().prepare("UPDATE share_links SET revoked_at = datetime('now') WHERE id = ?").run(linkId);
 }
 

@@ -4,6 +4,7 @@ import { currentUser } from "@/lib/session";
 import { unseenTagCount } from "@/lib/sharing";
 import { logoutAction } from "./actions";
 import "./globals.css";
+import { Icon } from "@/components/Icon";
 
 export const metadata: Metadata = {
   title: "Kid School Art",
@@ -16,10 +17,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="en">
       <body className="min-h-screen font-sans antialiased">
-        <header className="border-b border-line bg-white/70 backdrop-blur">
+        <header className="border-b border-line bg-white">
           <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
             <Link href="/" className="flex items-center gap-2 text-lg font-bold">
-              <span aria-hidden>🖍️</span> Kid School Art
+              <Icon name="crayon" className="size-5 text-brand" /> Kid School Art
             </Link>
             {user && (
               <form action={logoutAction} className="flex items-center gap-4 text-sm">

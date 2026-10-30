@@ -104,7 +104,7 @@ export async function signupAction(_: ActionResult, data: FormData): Promise<Act
 
 export async function loginAction(_: ActionResult, data: FormData): Promise<ActionResult> {
   const user = verifyPassword(text(data, "email"), text(data, "password"));
-  if (!user) return { error: "That email and password don't match." };
+  if (!user) return { error: "That email and password don’t match." };
   await signIn(user.id);
   redirect(safeNext(data.get("next")));
 }
@@ -299,7 +299,7 @@ export async function setCoverAction(_: ActionResult, data: FormData): Promise<A
   const failed = await attempt(() => setCover(id(data, "collectionId"), user.id, id(data, "artId")));
   if (failed) return failed;
   revalidatePath(`/art/${id(data, "artId")}`);
-  return { message: "This is now the collection's cover." };
+  return { message: "This is now the collection’s cover." };
 }
 
 export async function moveArtAction(kidId: number, artIds: number[], collectionId: number | null): Promise<ActionResult> {
@@ -332,7 +332,7 @@ export async function tagAction(_: ActionResult, data: FormData): Promise<Action
   });
   if (failed) return failed;
   revalidatePath(targetPath(target));
-  return { message: `Tagged ${count} ${count === 1 ? "person" : "people"}. They'll see it on their For you page.` };
+  return { message: `Tagged ${count} ${count === 1 ? "person" : "people"}. They’ll see it on their For you page.` };
 }
 
 export async function untagAction(_: ActionResult, data: FormData): Promise<ActionResult> {

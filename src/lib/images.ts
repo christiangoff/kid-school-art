@@ -42,10 +42,10 @@ export async function processImage(input: Buffer): Promise<ProcessedImage> {
   try {
     meta = await sharp(input).metadata();
   } catch {
-    throw new ImageError("That file isn't an image we can read. Try a JPEG or PNG.");
+    throw new ImageError("That file isn’t an image we can read. Try a JPEG or PNG.");
   }
   const ext = meta.format ? EXT_BY_FORMAT[meta.format] : undefined;
-  if (!ext) throw new ImageError("That file isn't an image we can read. Try a JPEG or PNG.");
+  if (!ext) throw new ImageError("That file isn’t an image we can read. Try a JPEG or PNG.");
 
   const resize = (max: number) =>
     sharp(input, { failOn: "none" })
@@ -69,7 +69,7 @@ export async function processImage(input: Buffer): Promise<ProcessedImage> {
   } catch {
     if (meta.format === "heif") {
       throw new ImageError(
-        "iPhone HEIC photos can't be read yet. Upload from Safari, which converts them, or set the camera to Most Compatible.",
+        "iPhone HEIC photos can’t be read yet. Upload from Safari, which converts them, or set the camera to Most Compatible.",
       );
     }
     throw new ImageError("Something went wrong reading that image. Try saving it as a JPEG.");

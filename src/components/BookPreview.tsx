@@ -1,4 +1,4 @@
-import type { BookPlan, Page } from "@/lib/book-plan";
+import { coverTextColor, type BookPlan, type Page } from "@/lib/book-plan";
 
 /** Small pictures of each page, laid out the same way as the PDF. */
 export function BookPreview({ plan, color, coverArtId }: { plan: BookPlan; color: string; coverArtId: number | null }) {
@@ -8,9 +8,9 @@ export function BookPreview({ plan, color, coverArtId }: { plan: BookPlan; color
   function body(p: Page) {
     if (p.kind === "cover") {
       return (
-        <div className="flex h-full flex-col items-center p-[6%] text-center text-white" style={{ background: color }}>
+        <div className="flex h-full flex-col items-center p-[6%] text-center" style={{ background: color, color: coverTextColor(color) }}>
           <p className="text-[0.7rem] font-bold leading-tight">{p.title}</p>
-          {p.subtitle && <p className="text-[0.5rem] opacity-90">{p.subtitle}</p>}
+          {p.subtitle && <p className="text-[0.5rem]">{p.subtitle}</p>}
           {coverArtId && (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={`/art-files/${coverArtId}/thumb`} alt="" className="mt-[6%] min-h-0 flex-1 border-[3px] border-white object-contain" />

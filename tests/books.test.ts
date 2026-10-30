@@ -14,7 +14,7 @@ import { photoPack } from "../src/lib/photo-pack";
 
 let n = 0;
 const settings = (over: Partial<BookSettings> = {}): BookSettings => ({
-  title: "June's Art", subtitle: "2026–2027", size: "square8", layout: "one", bleed: true,
+  title: "June's Art", subtitle: "2026-2027", size: "square8", layout: "one", bleed: true,
   showTitle: true, showNote: true, showDate: true, dedication: null, ...over,
 });
 
@@ -22,7 +22,7 @@ async function setup() {
   const owner = createUser({ email: `o${n++}@example.com`, name: "Owner", password: "password123" });
   const family = createFamily("F", owner.id);
   const kid = addKid(family, owner.id, { name: "June", birthdate: "2021-03-14" });
-  const col = (title: string) => createCollection(kid, owner.id, { title, school: "Little Oaks", teacher: "Ms. Rivera", grade: null, schoolYear: "2026–2027", description: null });
+  const col = (title: string) => createCollection(kid, owner.id, { title, school: "Little Oaks", teacher: "Ms. Rivera", grade: null, schoolYear: "2026-2027", description: null });
   const fall = col("Fall");
   const spring = col("Spring");
   const img = await processImage(await sharp({ create: { width: 300, height: 400, channels: 3, background: "#f97316" } }).jpeg().toBuffer());
@@ -64,9 +64,9 @@ describe("books", () => {
     expect(p4.pages.map((p) => p.kind)).toEqual(["cover", "dedication", "section", "art"]);
     const art = p4.pages[3];
     expect(art.kind === "art" && art.slots.map((x) => x.caption.meta)).toEqual([
-      "September 10, 2026 · 5 years old",
-      "October 1, 2026 · 5 years old",
-      "October 20, 2026 · 5 years old",
+      "September 10, 2026, 5 years old",
+      "October 1, 2026, 5 years old",
+      "October 20, 2026, 5 years old",
     ]);
   });
 
@@ -86,6 +86,6 @@ describe("books", () => {
     const book = getBook(createBook(s.kid, s.owner.id, settings(), [s.fall]), s.owner.id)!.book;
     const files = unzipSync(await photoPack(book, "2021-03-14"));
     expect(Object.keys(files).sort()).toEqual(["001 - Fall.jpg", "002 - Fall.jpg", "003 - Fall.jpg", "captions.txt"]);
-    expect(new TextDecoder().decode(files["captions.txt"])).toContain("September 10, 2026 · 5 years old");
+    expect(new TextDecoder().decode(files["captions.txt"])).toContain("September 10, 2026, 5 years old");
   });
 });

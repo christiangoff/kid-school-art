@@ -47,7 +47,7 @@ export function BookFields({ book, collections, chosen, defaults }: {
                 <input type="checkbox" name="collectionId" value={c.id} defaultChecked={chosen.includes(c.id)} className="mt-1 accent-brand" />
                 <span>
                   <span className="font-semibold">{c.title}</span>
-                  <span className="text-muted"> · {[collectionDetails(c), `${c.artCount} pieces`].filter(Boolean).join(" · ")}</span>
+                  <span className="block text-muted">{[collectionDetails(c), `${c.artCount} pieces`].filter(Boolean).join(", ")}</span>
                 </span>
               </label>
             ))}

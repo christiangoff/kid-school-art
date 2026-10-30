@@ -27,7 +27,7 @@ export default async function SharedPage({ params }: { params: Promise<{ token: 
     const art = artFor(collection.kidId, collection.id);
     return (
       <>
-        <PageHeader title={collection.title} subtitle={`${kidName(collection.kidId)} · ${collectionDetails(collection)}`} />
+        <PageHeader title={collection.title} subtitle={[kidName(collection.kidId), collectionDetails(collection)].filter(Boolean).join(", ")} />
         {art.length ? <ArtGrid art={art} kidId={collection.kidId} linkBase={`${base}/art`} imageBase={`${base}/img`} /> : <Card className="text-muted">No art here yet.</Card>}
       </>
     );
@@ -38,7 +38,7 @@ export default async function SharedPage({ params }: { params: Promise<{ token: 
   const unsorted = artFor(kidId, "unsorted");
   return (
     <>
-      <PageHeader title={`${kidName(kidId)}'s art`} />
+      <PageHeader title={`${kidName(kidId)}’s art`} />
       {collections.length === 0 && unsorted.length === 0 && <Card className="text-muted">No art here yet.</Card>}
       {collections.map((c) => (
         <section key={c.id} className="mb-10">

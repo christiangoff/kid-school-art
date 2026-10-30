@@ -17,19 +17,19 @@ export function ShareLinkList({ links, baseUrl, showTarget }: { links: ShareLink
             <div>
               <p className="font-semibold">
                 {l.label ?? "Share link"}
-                {showTarget && <span className="font-normal text-muted"> · {l.targetName}</span>}
+                {showTarget && <span className="block font-normal text-muted">{l.targetName}</span>}
               </p>
               <p className="text-xs text-muted">
                 {l.expiresAt ? `Expires ${when(l.expiresAt)}` : "Never expires"}
-                {" · "}
-                {l.allowDownload ? "Downloads allowed" : "View only"}
-                {" · "}
-                {l.viewCount === 0 ? "Not opened yet" : `Opened ${l.viewCount} ${l.viewCount === 1 ? "time" : "times"}, last ${when(l.lastViewedAt!)}`}
+                {", "}
+                {l.allowDownload ? "downloads allowed" : "view only"}
+                {", "}
+                {l.viewCount === 0 ? "not opened yet" : `opened ${l.viewCount} ${l.viewCount === 1 ? "time" : "times"}, last ${when(l.lastViewedAt!)}`}
               </p>
             </div>
             <ActionForm action={revokeShareLinkAction} className="">
               <input type="hidden" name="linkId" value={l.id} />
-              <button className="text-xs font-semibold text-red-700 hover:underline">Turn off link</button>
+              <button className="min-h-8 whitespace-nowrap text-sm font-semibold text-danger hover:underline">Turn off link</button>
             </ActionForm>
           </div>
           <div className="mt-2">

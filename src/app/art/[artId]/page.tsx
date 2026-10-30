@@ -27,7 +27,7 @@ export default async function ArtPage({ params }: { params: Promise<{ artId: str
   const { prev, next, index, total } = neighbors(art);
   const back = collection
     ? { href: `/collections/${collection.id}`, label: collection.title }
-    : { href: `/kids/${kid.id}`, label: `${kid.name}'s unsorted art` };
+    : { href: `/kids/${kid.id}`, label: `${kid.name}’s unsorted art` };
   // How old they were when they made it (or when it was uploaded, if we don't know).
   const ageThen = kid.birthdate ? ageLabel(kid.birthdate, new Date(`${art.madeOn ?? art.createdAt.slice(0, 10)}T00:00:00`)) : "";
 
@@ -35,11 +35,11 @@ export default async function ArtPage({ params }: { params: Promise<{ artId: str
     <div className="grid gap-6 lg:grid-cols-[1fr_20rem]">
       <div>
         <div className="mb-3 flex items-center justify-between text-sm">
-          <Link href={back.href} className="text-muted hover:text-ink">← {back.label}</Link>
+          <Link href={back.href} className="min-w-0 truncate text-muted hover:text-ink">Back to {back.label}</Link>
           <span className="flex items-center gap-3 text-muted">
-            {prev ? <Link href={`/art/${prev}`} className="font-semibold text-ink">‹ Newer</Link> : <span>‹ Newer</span>}
+            {prev ? <Link href={`/art/${prev}`} className="font-semibold text-ink">Newer</Link> : <span>Newer</span>}
             <span>{index + 1} of {total}</span>
-            {next ? <Link href={`/art/${next}`} className="font-semibold text-ink">Older ›</Link> : <span>Older ›</span>}
+            {next ? <Link href={`/art/${next}`} className="font-semibold text-ink">Older</Link> : <span>Older</span>}
           </span>
         </div>
         <div className="flex items-center justify-center rounded-2xl border border-line bg-white p-3">
@@ -59,8 +59,8 @@ export default async function ArtPage({ params }: { params: Promise<{ artId: str
           <h1 className="text-2xl font-bold">{art.title ?? "Untitled"}</h1>
           <p className="mt-1 text-sm text-muted">
             By {kid.name}
-            {art.madeOn && ` · ${formatDate(art.madeOn)}`}
-            {ageThen && ` · ${ageThen}`}
+            {art.madeOn && `, ${formatDate(art.madeOn)}`}
+            {ageThen && `, ${ageThen}`}
           </p>
           {art.note && <blockquote className="mt-3 border-l-4 border-brand/40 pl-3 italic">“{art.note}”</blockquote>}
           <div className="mt-4 flex gap-4 text-sm font-semibold text-brand">
@@ -79,7 +79,7 @@ export default async function ArtPage({ params }: { params: Promise<{ artId: str
               <Field label="Title">
                 <Input name="title" defaultValue={art.title ?? ""} placeholder="Rainbow house" />
               </Field>
-              <Field label={`In ${kid.name}'s words`} hint="What they said about it, if anything.">
+              <Field label={`In ${kid.name}’s words`} hint="What they said about it, if anything.">
                 <textarea name="note" rows={3} className={inputClass} defaultValue={art.note ?? ""} />
               </Field>
               <Field label="Date made">

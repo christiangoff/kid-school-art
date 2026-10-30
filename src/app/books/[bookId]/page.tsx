@@ -37,7 +37,7 @@ export default async function BookPage({ params }: { params: Promise<{ bookId: s
     <div className="space-y-8">
       <PageHeader
         title={book.title}
-        subtitle={`${BOOK_SIZES[book.size].label} · ${plan.pieceCount} pieces · ${plan.pages.length} pages`}
+        subtitle={`${BOOK_SIZES[book.size].label}, ${plan.pieceCount} pieces, ${plan.pages.length} pages`}
         back={{ href: `/kids/${kid.id}`, label: kid.name }}
       />
 
@@ -66,7 +66,7 @@ export default async function BookPage({ params }: { params: Promise<{ bookId: s
                             <input type="hidden" name="collectionId" value={s.collection.id} />
                             <input type="hidden" name="direction" value={dir} />
                             <button
-                              className="rounded-full border border-line px-2 text-sm disabled:opacity-30"
+                              className="grid size-8 place-items-center rounded-full border border-edge text-sm hover:bg-paper disabled:cursor-not-allowed disabled:border-line disabled:bg-line disabled:text-muted"
                               disabled={dir === "up" ? i === 0 : i === ordered.length - 1}
                               aria-label={`Move ${s.collection.title} ${dir}`}
                             >
@@ -96,10 +96,10 @@ export default async function BookPage({ params }: { params: Promise<{ bookId: s
                                 {hidden}
                                 <input type="hidden" name="artId" value={a.id} />
                                 <input type="hidden" name="op" value="cover" />
-                                <button className="mt-0.5 w-full text-center text-[0.7rem] text-muted hover:text-brand">Use as cover</button>
+                                <button className="min-h-8 w-full whitespace-nowrap text-center text-xs text-muted hover:text-brand">Set cover</button>
                               </ActionForm>
                             )}
-                            {coverArtId === a.id && <p className="mt-0.5 text-center text-[0.7rem] font-semibold text-brand">Cover</p>}
+                            {coverArtId === a.id && <p className="flex min-h-8 items-center justify-center text-xs font-semibold text-brand">Cover</p>}
                           </div>
                         );
                       })}
@@ -153,7 +153,7 @@ export default async function BookPage({ params }: { params: Promise<{ bookId: s
                 </li>
               ))}
             </ul>
-            <p className="mt-3 text-xs text-muted">Sizes and page minimums change, so check the service's current options before ordering.</p>
+            <p className="mt-3 text-xs text-muted">Sizes and page minimums change, so check the service’s current options before ordering.</p>
           </Card>
           {edit && (
             <Card>

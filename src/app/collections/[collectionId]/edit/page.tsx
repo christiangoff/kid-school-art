@@ -27,7 +27,7 @@ export default async function EditCollection({ params }: { params: Promise<{ col
       </Card>
       <Card>
         <h2 className="font-bold">Delete this collection</h2>
-        <p className="mb-3 mt-1 text-sm text-muted">The art in it isn't deleted. It moves to {kid.name}'s unsorted pile.</p>
+        <p className="mb-3 mt-1 text-sm text-muted">The art in it isn’t deleted. It moves to {kid.name}’s unsorted pile.</p>
         <ActionForm action={deleteCollectionAction}>
           <input type="hidden" name="collectionId" value={collection.id} />
           <SubmitButton variant="danger">Delete collection</SubmitButton>

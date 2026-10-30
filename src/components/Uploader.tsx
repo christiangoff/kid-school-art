@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useRef, useState, type ChangeEvent, type DragEvent } from "react";
 import { Button } from "./ui";
+import { Icon } from "@/components/Icon";
 
 type Item = { key: string; name: string; status: "waiting" | "uploading" | "done" | "failed"; error?: string };
 
@@ -78,11 +79,11 @@ export function Uploader({ kidId, collectionId }: { kidId: number; collectionId?
       }}
       onDragLeave={() => setDragging(false)}
       onDrop={dropped}
-      className={`rounded-2xl border-2 border-dashed p-6 text-center transition ${
+      className={`rounded-2xl border-2 border-dashed p-6 text-center transition-colors ${
         dragging ? "border-brand bg-brand/5" : "border-line bg-white"
       }`}
     >
-      <p className="text-3xl" aria-hidden>📤</p>
+      <Icon name="upload" className="mx-auto size-8 text-muted" />
       <p className="mt-1 font-semibold">Drop scans or photos here</p>
       <p className="text-sm text-muted">JPEG, PNG, TIFF, or WebP, up to 40 MB each</p>
       <div className="mt-4 flex flex-wrap justify-center gap-2">
@@ -107,10 +108,13 @@ export function Uploader({ kidId, collectionId }: { kidId: number; collectionId?
             {busy ? `Uploading… ${done} of ${items.length}` : `Uploaded ${done} of ${items.length}`}
           </p>
           <div className="mt-2 h-2 overflow-hidden rounded-full bg-line">
-            <div className="h-full bg-brand transition-all" style={{ width: `${((done + failed.length) / items.length) * 100}%` }} />
+            <div
+              className="h-full origin-left bg-brand transition-transform"
+              style={{ transform: `scaleX(${(done + failed.length) / items.length})` }}
+            />
           </div>
           {failed.length > 0 && (
-            <ul className="mt-3 space-y-1 text-red-800">
+            <ul className="mt-3 space-y-1 text-danger">
               {failed.map((f) => (
                 <li key={f.key}>
                   <strong>{f.name}</strong>: {f.error}
@@ -119,7 +123,7 @@ export function Uploader({ kidId, collectionId }: { kidId: number; collectionId?
             </ul>
           )}
           {!busy && (
-            <button type="button" className="mt-2 text-xs font-semibold text-muted hover:text-ink" onClick={() => setItems([])}>
+            <button type="button" className="mt-2 min-h-8 text-sm font-semibold text-muted hover:text-ink" onClick={() => setItems([])}>
               Clear
             </button>
           )}

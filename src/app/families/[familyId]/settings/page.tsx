@@ -87,7 +87,7 @@ export default async function FamilySettings({ params }: { params: Promise<{ fam
                 <ActionForm action={removeMemberAction} className="mt-1">
                   <input type="hidden" name="familyId" value={family.id} />
                   <input type="hidden" name="userId" value={m.userId} />
-                  <button className="text-xs font-semibold text-red-700 hover:underline">Remove {m.name}</button>
+                  <button className="min-h-8 whitespace-nowrap text-sm font-semibold text-danger hover:underline">Remove {m.name}</button>
                 </ActionForm>
               )}
             </li>
@@ -107,7 +107,7 @@ export default async function FamilySettings({ params }: { params: Promise<{ fam
         <Card>
           <h2 className="text-lg font-bold">Invite someone</h2>
           <p className="mb-4 mt-1 text-sm text-muted">
-            You'll get a link to text or email them. They make an account and join this family.
+            You’ll get a link to text or email them. They make an account and join this family.
           </p>
           <ActionForm action={createInviteAction}>
             <input type="hidden" name="familyId" value={family.id} />
@@ -115,7 +115,7 @@ export default async function FamilySettings({ params }: { params: Promise<{ fam
               <Field label="Their email" hint="Optional, fills in their sign-up form.">
                 <Input name="email" type="email" />
               </Field>
-              <Field label="Relationship" hint={'Like "Grandma" or "Uncle Joe".'}>
+              <Field label="Relationship" hint="Like “Grandma” or “Uncle Joe”.">
                 <Input name="relationship" />
               </Field>
               <Field label="Role">
@@ -129,20 +129,20 @@ export default async function FamilySettings({ params }: { params: Promise<{ fam
 
           {invites.length > 0 && (
             <>
-              <h3 className="mt-6 text-sm font-semibold uppercase tracking-wide text-muted">Waiting to join</h3>
+              <h3 className="mt-6 font-semibold">Waiting to join</h3>
               <ul className="mt-2 divide-y divide-line">
                 {invites.map((i) => (
                   <li key={i.id} className="flex items-center justify-between py-2 text-sm">
                     <span>
                       {i.relationship ?? i.email ?? "Invite link"}
                       <span className="text-muted">
-                        {" "}· {ROLE_LABELS[i.role]} · expires {i.expiresAt.slice(0, 10)}
+                        {", "}{ROLE_LABELS[i.role]}, expires {i.expiresAt.slice(0, 10)}
                       </span>
                     </span>
                     <ActionForm action={revokeInviteAction} className="">
                       <input type="hidden" name="familyId" value={family.id} />
                       <input type="hidden" name="inviteId" value={i.id} />
-                      <button className="text-xs font-semibold text-red-700 hover:underline">Cancel invite</button>
+                      <button className="min-h-8 whitespace-nowrap text-sm font-semibold text-danger hover:underline">Cancel invite</button>
                     </ActionForm>
                   </li>
                 ))}
@@ -164,7 +164,7 @@ export default async function FamilySettings({ params }: { params: Promise<{ fam
 
       <Card>
         <h2 className="font-bold">Leave {family.name}</h2>
-        <p className="mb-3 mt-1 text-sm text-muted">You'll stop seeing this family's art until someone invites you again.</p>
+        <p className="mb-3 mt-1 text-sm text-muted">You’ll stop seeing this family’s art until someone invites you again.</p>
         <ActionForm action={removeMemberAction}>
           <input type="hidden" name="familyId" value={family.id} />
           <input type="hidden" name="userId" value={user.id} />

@@ -27,7 +27,7 @@ export default async function NewBook({ params }: { params: Promise<{ kidId: str
       <Card>
         <ActionForm action={createBookAction}>
           <input type="hidden" name="kidId" value={kid.id} />
-          <BookFields collections={collections} chosen={chosen} defaults={{ title: `${kid.name}'s Art`, subtitle: year }} />
+          <BookFields collections={collections} chosen={chosen} defaults={{ title: `${kid.name}’s Art`, subtitle: year }} />
           <SubmitButton>Make the book</SubmitButton>
         </ActionForm>
       </Card>

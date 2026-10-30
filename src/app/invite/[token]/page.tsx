@@ -3,6 +3,7 @@ import { ButtonLink, Card } from "@/components/ui";
 import { acceptInviteAction } from "@/app/actions";
 import { findInvite, ROLE_HELP, ROLE_LABELS } from "@/lib/families";
 import { currentUser } from "@/lib/session";
+import { Icon } from "@/components/Icon";
 
 export const dynamic = "force-dynamic";
 
@@ -23,10 +24,10 @@ export default async function InvitePage({ params }: { params: Promise<{ token: 
   return (
     <div className="mx-auto max-w-md">
       <Card className="text-center">
-        <p className="text-4xl" aria-hidden>💌</p>
-        <h1 className="mt-2 text-2xl font-bold">You're invited to {invite.familyName}</h1>
+        <Icon name="envelope" className="mx-auto size-10 text-brand" />
+        <h1 className="mt-2 text-2xl font-bold">You’re invited to {invite.familyName}</h1>
         <p className="mt-2 text-muted">
-          {invite.inviterName ? `${invite.inviterName} invited you` : "You've been invited"} to join as a{" "}
+          {invite.inviterName ? `${invite.inviterName} invited you` : "You’ve been invited"} to join as a{" "}
           <strong>{ROLE_LABELS[invite.role].toLowerCase()}</strong>. {ROLE_HELP[invite.role]}
         </p>
         <div className="mt-6 flex flex-col items-center gap-2">
