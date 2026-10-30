@@ -1,4 +1,5 @@
 import { db } from "./db";
+import { deleteKidArt } from "./images";
 import { hashToken, newToken, sqlTime } from "./tokens";
 
 export type Role = "owner" | "parent" | "viewer";
@@ -205,6 +206,7 @@ export function deleteKid(kidId: number, userId: number) {
   const found = getKid(kidId, userId);
   if (!found || !can(found.role, "manage")) throw new FamilyError("Only family owners can remove a kid.");
   db().prepare("DELETE FROM kids WHERE id = ?").run(kidId);
+  deleteKidArt(kidId);
 }
 
 export function createInvite(

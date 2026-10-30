@@ -59,4 +59,39 @@ export const migrations: string[] = [
   CREATE INDEX invites_family ON invites(family_id);
   CREATE INDEX sessions_user ON sessions(user_id);
   `,
+  `
+  -- A gallery of a kid's art, usually one per class or school year.
+  CREATE TABLE collections (
+    id INTEGER PRIMARY KEY,
+    kid_id INTEGER NOT NULL REFERENCES kids(id) ON DELETE CASCADE,
+    title TEXT NOT NULL,
+    school TEXT,
+    teacher TEXT,
+    grade TEXT,
+    school_year TEXT,
+    description TEXT,
+    cover_art_id INTEGER,
+    created_at TEXT NOT NULL DEFAULT (datetime('now'))
+  );
+
+  -- One piece of art. Files live in DATA_DIR/art/<kid id>/<art id>-<size>.
+  CREATE TABLE artworks (
+    id INTEGER PRIMARY KEY,
+    kid_id INTEGER NOT NULL REFERENCES kids(id) ON DELETE CASCADE,
+    collection_id INTEGER REFERENCES collections(id) ON DELETE SET NULL,
+    title TEXT,
+    note TEXT,
+    made_on TEXT,
+    original_name TEXT,
+    original_ext TEXT NOT NULL,
+    width INTEGER NOT NULL,
+    height INTEGER NOT NULL,
+    uploaded_by INTEGER REFERENCES users(id) ON DELETE SET NULL,
+    created_at TEXT NOT NULL DEFAULT (datetime('now'))
+  );
+
+  CREATE INDEX collections_kid ON collections(kid_id);
+  CREATE INDEX artworks_kid ON artworks(kid_id);
+  CREATE INDEX artworks_collection ON artworks(collection_id);
+  `,
 ];
