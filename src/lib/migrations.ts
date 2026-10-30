@@ -94,4 +94,42 @@ export const migrations: string[] = [
   CREATE INDEX artworks_kid ON artworks(kid_id);
   CREATE INDEX artworks_collection ON artworks(collection_id);
   `,
+  `
+  -- Pointing a family member at a piece of art or a collection ("Grandma, look!").
+  CREATE TABLE tags (
+    id INTEGER PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    art_id INTEGER REFERENCES artworks(id) ON DELETE CASCADE,
+    collection_id INTEGER REFERENCES collections(id) ON DELETE CASCADE,
+    tagged_by INTEGER REFERENCES users(id) ON DELETE SET NULL,
+    message TEXT,
+    seen_at TEXT,
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    CHECK ((art_id IS NULL) <> (collection_id IS NULL))
+  );
+  CREATE UNIQUE INDEX tags_art ON tags(user_id, art_id) WHERE art_id IS NOT NULL;
+  CREATE UNIQUE INDEX tags_collection ON tags(user_id, collection_id) WHERE collection_id IS NOT NULL;
+
+  -- Read-only links for people without an account. Exactly one target is set.
+  -- The token is kept so the link can be copied again later; revoking it is
+  -- how access is taken away.
+  CREATE TABLE share_links (
+    id INTEGER PRIMARY KEY,
+    token TEXT NOT NULL UNIQUE,
+    family_id INTEGER NOT NULL REFERENCES families(id) ON DELETE CASCADE,
+    kid_id INTEGER REFERENCES kids(id) ON DELETE CASCADE,
+    collection_id INTEGER REFERENCES collections(id) ON DELETE CASCADE,
+    art_id INTEGER REFERENCES artworks(id) ON DELETE CASCADE,
+    label TEXT,
+    allow_download INTEGER NOT NULL DEFAULT 0,
+    expires_at TEXT,
+    revoked_at TEXT,
+    view_count INTEGER NOT NULL DEFAULT 0,
+    last_viewed_at TEXT,
+    created_by INTEGER REFERENCES users(id) ON DELETE SET NULL,
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    CHECK ((kid_id IS NOT NULL) + (collection_id IS NOT NULL) + (art_id IS NOT NULL) = 1)
+  );
+  CREATE INDEX share_links_family ON share_links(family_id);
+  `,
 ];

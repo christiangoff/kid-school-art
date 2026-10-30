@@ -263,3 +263,13 @@ export function neighbors(art: Artwork): { prev: number | null; next: number | n
     total: list.length,
   };
 }
+
+/** Looks up art without a permission check, for share links that have already been checked. */
+export function artById(artId: number): Artwork | null {
+  return (db().prepare(`SELECT ${ART_COLUMNS} FROM artworks a WHERE a.id = ?`).get(artId) as Artwork | undefined) ?? null;
+}
+
+/** Looks up a collection without a permission check, for share links. */
+export function getCollectionById(collectionId: number): Collection | null {
+  return (db().prepare(`SELECT ${COLLECTION_COLUMNS} FROM collections c WHERE c.id = ?`).get(collectionId) as Collection | undefined) ?? null;
+}

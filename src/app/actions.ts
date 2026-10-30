@@ -31,8 +31,9 @@ import {
   type CollectionInput,
 } from "@/lib/gallery";
 import { requireUser, safeNext, signIn, signOut } from "@/lib/session";
+import { createShareLink, revokeShareLink, tagMembers, untag, type ShareTarget, type TagTarget } from "@/lib/sharing";
 
-export type ActionResult = { error?: string; message?: string; link?: string };
+export type ActionResult = { error?: string; message?: string; link?: string; linkNote?: string };
 
 function text(data: FormData, key: string): string {
   const v = data.get(key);
@@ -60,7 +61,7 @@ async function attempt(fn: () => void | Promise<void>): Promise<ActionResult | n
   }
 }
 
-async function baseUrl(): Promise<string> {
+export async function baseUrl(): Promise<string> {
   if (process.env.APP_URL) return process.env.APP_URL.replace(/\/$/, "");
   const h = await headers();
   const host = h.get("x-forwarded-host") ?? h.get("host") ?? "localhost:3000";
@@ -296,5 +297,70 @@ export async function moveArtAction(kidId: number, artIds: number[], collectionI
   if (failed) return failed;
   revalidatePath(`/kids/${kidId}`);
   if (collectionId) revalidatePath(`/collections/${collectionId}`);
+  return {};
+}
+
+// Sharing
+
+function tagTarget(data: FormData): TagTarget {
+  return text(data, "artId") ? { artId: id(data, "artId") } : { collectionId: id(data, "collectionId") };
+}
+
+function targetPath(target: TagTarget): string {
+  return "artId" in target ? `/art/${target.artId}` : `/collections/${target.collectionId}`;
+}
+
+export async function tagAction(_: ActionResult, data: FormData): Promise<ActionResult> {
+  const user = await requireUser();
+  const target = tagTarget(data);
+  const userIds = data.getAll("userId").map(Number).filter(Boolean);
+  if (userIds.length === 0) return { error: "Pick at least one person to tag." };
+  let count = 0;
+  const failed = await attempt(() => {
+    count = tagMembers(target, user.id, userIds, text(data, "message") || null);
+  });
+  if (failed) return failed;
+  revalidatePath(targetPath(target));
+  return { message: `Tagged ${count} ${count === 1 ? "person" : "people"}. They'll see it on their For you page.` };
+}
+
+export async function untagAction(_: ActionResult, data: FormData): Promise<ActionResult> {
+  const user = await requireUser();
+  const target = tagTarget(data);
+  const failed = await attempt(() => untag(target, user.id, id(data, "userId")));
+  if (failed) return failed;
+  revalidatePath(targetPath(target));
+  return {};
+}
+
+function shareTarget(data: FormData): ShareTarget {
+  const type = text(data, "type");
+  const targetId = id(data, "targetId");
+  if (type === "kid") return { kidId: targetId };
+  if (type === "collection") return { collectionId: targetId };
+  return { artId: targetId };
+}
+
+export async function createShareLinkAction(_: ActionResult, data: FormData): Promise<ActionResult> {
+  const user = await requireUser();
+  const expires = text(data, "expires");
+  let token = "";
+  const failed = await attempt(() => {
+    token = createShareLink(shareTarget(data), user.id, {
+      label: text(data, "label") || null,
+      expiresInDays: expires === "never" ? null : Number(expires) || 30,
+      allowDownload: data.get("allowDownload") === "on",
+    });
+  });
+  if (failed) return failed;
+  revalidatePath(`/share/${text(data, "type")}/${text(data, "targetId")}`);
+  return { link: `${await baseUrl()}/s/${token}`, linkNote: "Anyone with this link can look, without signing in." };
+}
+
+export async function revokeShareLinkAction(_: ActionResult, data: FormData): Promise<ActionResult> {
+  const user = await requireUser();
+  const failed = await attempt(() => revokeShareLink(id(data, "linkId"), user.id));
+  if (failed) return failed;
+  revalidatePath("/", "layout");
   return {};
 }

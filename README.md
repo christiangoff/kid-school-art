@@ -14,7 +14,7 @@ Each kid gets their own page. Families invite grandparents and other relatives w
 
 1. **Foundation and families** (done): accounts, families, kids, invites, and roles.
 2. **Kid pages and galleries** (done): collections tagged by school, teacher, year, and grade, with uploads from a scanner, phone camera, drag-and-drop, or bulk import.
-3. **Sharing**: tag family members on art, plus read-only share links that can be revoked or expire.
+3. **Sharing** (done): tag family members on art, plus read-only share links that can be revoked or expire.
 4. **Year-end books**: print-ready PDF layouts and integrations with print services.
 
 ## Adding art
@@ -29,6 +29,11 @@ On a kid's page or in a collection, you can:
 Art uploaded on the kid's page lands in **Unsorted**. Use **Select** to pick pieces and move them into a collection. The app keeps the original file and makes smaller copies for the gallery, turning phone photos upright.
 
 iPhone HEIC photos can't be read yet. Safari converts them when you upload, or you can set the camera to "Most Compatible".
+
+## Sharing
+
+- **Tag family:** on any piece or collection, tag people in the family, with an optional note. It shows up on their **For you** page, with a badge in the header until they've looked.
+- **Share links:** parents and owners can use **Share** on a kid, collection, or piece to make a read-only link for someone without an account, like a teacher or a friend. Each link can expire after a week, a month, three months, or a year, or never, and can optionally allow downloading the originals. You can see how often each link was opened and turn any of them off under **Manage family**.
 
 ## Develop on the Mac
 
