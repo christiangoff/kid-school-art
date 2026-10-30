@@ -15,7 +15,7 @@ export default async function Signup({ searchParams }: { searchParams: Promise<{
   if (!invite && !openSignupAllowed()) {
     return (
       <div className="mx-auto max-w-sm text-center">
-        <h1 className="text-2xl font-bold">You'll need an invite</h1>
+        <h1 className="text-2xl font-bold">You’ll need an invite</h1>
         <p className="mt-2 text-muted">
           Ask a family owner to send you an invite link. Already have an account?{" "}
           <Link href="/login" className="font-semibold text-brand">Sign in</Link>
@@ -31,7 +31,7 @@ export default async function Signup({ searchParams }: { searchParams: Promise<{
         {invite
           ? "Make an account to see the kids' art."
           : first
-            ? "You're the first one here, so you'll set things up."
+            ? "You’re the first one here, so you’ll set things up."
             : "Make an account to get started."}
       </p>
       <Card>

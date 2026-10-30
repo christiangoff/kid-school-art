@@ -47,7 +47,7 @@ export default async function CollectionPage({ params }: { params: Promise<{ col
       )}
       {art.length === 0 ? (
         !edit && (
-          <Card className="py-10 text-center text-muted">There's no art in this collection yet.</Card>
+          <Card className="py-10 text-center text-muted">There’s no art in this collection yet.</Card>
         )
       ) : (
         <ArtGrid art={art} kidId={kid.id} canEdit={edit} collections={others} />

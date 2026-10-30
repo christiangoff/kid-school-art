@@ -40,7 +40,7 @@ export function captionFor(art: Artwork, book: Book, birthdate: string | null): 
   return {
     title: book.showTitle ? art.title : null,
     note: book.showNote ? art.note : null,
-    meta: meta.length ? meta.join(" · ") : null,
+    meta: meta.length ? meta.join(", ") : null,
   };
 }
 
@@ -89,4 +89,21 @@ export function planBook(book: Book, sections: BookSection[], birthdate: string 
   if (padToMinimum) while (pages.length < MIN_PRINT_PAGES) pages.push({ kind: "blank" });
   if (pages.length % 2 === 1) pages.push({ kind: "blank" });
   return { width, height, bleed: book.bleed ? BLEED_IN : 0, pages, pieceCount: all.length };
+}
+
+function luminance(hex: string) {
+  const n = parseInt(hex.slice(1), 16);
+  const [r, g, b] = [n >> 16, n >> 8, n].map((v) => {
+    const c = (v & 255) / 255;
+    return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+  });
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+}
+
+/** White or ink for the cover title, whichever reads better on the kid's colour. */
+export function coverTextColor(background: string): "#ffffff" | "#2b2118" {
+  const bg = luminance(background);
+  const onWhite = 1.05 / (bg + 0.05);
+  const onInk = (bg + 0.05) / (luminance("#2b2118") + 0.05);
+  return onWhite >= onInk ? "#ffffff" : "#2b2118";
 }

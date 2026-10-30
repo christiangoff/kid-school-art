@@ -39,10 +39,10 @@ export type ArtInput = { title: string | null; note: string | null; madeOn: stri
 
 export const GRADES = ["Preschool", "Pre-K", "Kindergarten", "1st grade", "2nd grade", "3rd grade", "4th grade", "5th grade"];
 
-/** School years run August to July, written like "2026–2027". */
+/** School years run August to July, written like "2026-2027". */
 export function schoolYearFor(date: Date = new Date()): string {
   const start = date.getMonth() >= 7 ? date.getFullYear() : date.getFullYear() - 1;
-  return `${start}–${start + 1}`;
+  return `${start}-${start + 1}`;
 }
 
 const COLLECTION_COLUMNS = `c.id, c.kid_id AS kidId, c.title, c.school, c.teacher, c.grade,
@@ -60,7 +60,7 @@ function clean(value: string | null | undefined): string | null {
 
 function requireKidRole(kidId: number, userId: number, action: "view" | "edit"): { kid: Kid; role: Role } {
   const found = getKid(kidId, userId);
-  if (!found || !can(found.role, action)) throw new FamilyError("You don't have permission to do that.");
+  if (!found || !can(found.role, action)) throw new FamilyError("You don’t have permission to do that.");
   return found;
 }
 
@@ -126,7 +126,7 @@ export function createCollection(kidId: number, userId: number, input: Collectio
 
 export function updateCollection(collectionId: number, userId: number, input: CollectionInput) {
   const found = getCollection(collectionId, userId);
-  if (!found || !can(found.role, "edit")) throw new FamilyError("You don't have permission to do that.");
+  if (!found || !can(found.role, "edit")) throw new FamilyError("You don’t have permission to do that.");
   const c = cleanCollection(input);
   db()
     .prepare(
@@ -139,16 +139,16 @@ export function updateCollection(collectionId: number, userId: number, input: Co
 /** Deletes the collection. Its art stays on the kid's page, unsorted. */
 export function deleteCollection(collectionId: number, userId: number): number {
   const found = getCollection(collectionId, userId);
-  if (!found || !can(found.role, "edit")) throw new FamilyError("You don't have permission to do that.");
+  if (!found || !can(found.role, "edit")) throw new FamilyError("You don’t have permission to do that.");
   db().prepare("DELETE FROM collections WHERE id = ?").run(collectionId);
   return found.kid.id;
 }
 
 export function setCover(collectionId: number, userId: number, artId: number) {
   const found = getCollection(collectionId, userId);
-  if (!found || !can(found.role, "edit")) throw new FamilyError("You don't have permission to do that.");
+  if (!found || !can(found.role, "edit")) throw new FamilyError("You don’t have permission to do that.");
   const art = db().prepare("SELECT collection_id AS c FROM artworks WHERE id = ?").get(artId) as { c: number } | undefined;
-  if (art?.c !== collectionId) throw new FamilyError("That art isn't in this collection.");
+  if (art?.c !== collectionId) throw new FamilyError("That art isn’t in this collection.");
   db().prepare("UPDATE collections SET cover_art_id = ? WHERE id = ?").run(artId, collectionId);
 }
 
@@ -216,7 +216,7 @@ export function addArt(
 
 export function updateArt(artId: number, userId: number, input: ArtInput) {
   const found = getArt(artId, userId);
-  if (!found || !can(found.role, "edit")) throw new FamilyError("You don't have permission to do that.");
+  if (!found || !can(found.role, "edit")) throw new FamilyError("You don’t have permission to do that.");
   checkCollection(found.art.kidId, input.collectionId);
   db()
     .prepare("UPDATE artworks SET title = ?, note = ?, made_on = ?, collection_id = ? WHERE id = ?")
@@ -243,7 +243,7 @@ export function moveArt(kidId: number, userId: number, artIds: number[], collect
 
 export function deleteArt(artId: number, userId: number): Artwork {
   const found = getArt(artId, userId);
-  if (!found || !can(found.role, "edit")) throw new FamilyError("You don't have permission to do that.");
+  if (!found || !can(found.role, "edit")) throw new FamilyError("You don’t have permission to do that.");
   db().transaction(() => {
     clearCoverIf(artId);
     db().prepare("DELETE FROM artworks WHERE id = ?").run(artId);

@@ -168,4 +168,9 @@ export const migrations: string[] = [
 
   CREATE INDEX books_kid ON books(kid_id);
   `,
+  // School years are written with a plain hyphen ("2026-2027").
+  `
+  UPDATE collections SET school_year = replace(school_year, '–', '-') WHERE school_year LIKE '%–%';
+  UPDATE books SET subtitle = replace(subtitle, '–', '-') WHERE subtitle LIKE '%–%';
+  `,
 ];

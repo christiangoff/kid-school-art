@@ -18,11 +18,11 @@ export function ActionForm({ action, children, className = "space-y-4" }: {
     <form action={formAction} className={className}>
       {children}
       {state.error && (
-        <p role="alert" className="rounded-xl bg-red-50 px-3 py-2 text-sm text-red-800">
+        <p role="alert" className="rounded-xl bg-danger-tint px-3 py-2 text-sm text-danger">
           {state.error}
         </p>
       )}
-      {state.message && <p className="rounded-xl bg-green-50 px-3 py-2 text-sm text-green-800">{state.message}</p>}
+      {state.message && <p className="rounded-xl bg-ok-tint px-3 py-2 text-sm text-ok">{state.message}</p>}
       {state.link && <CopyLink link={state.link} note={state.linkNote} />}
     </form>
   );
@@ -42,7 +42,7 @@ export function CopyLink({ link, note, title = "Send this link to them" }: { lin
     <div className="rounded-xl border border-line bg-paper p-3">
       <p className="text-sm font-semibold">{title}</p>
       <div className="mt-2 flex gap-2">
-        <input readOnly value={link} className="min-w-0 flex-1 rounded-lg border border-line bg-white px-2 py-1 text-sm" onFocus={(e) => e.currentTarget.select()} />
+        <input readOnly value={link} className="min-w-0 flex-1 rounded-lg border border-edge bg-white px-2 py-1 text-sm" onFocus={(e) => e.currentTarget.select()} />
         <Button type="button" variant="secondary" onClick={() => navigator.clipboard?.writeText(link)}>
           Copy
         </Button>

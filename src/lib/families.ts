@@ -61,7 +61,7 @@ export function roleIn(familyId: number, userId: number): Role | null {
 /** Returns the user's role, or throws if they may not take the action. */
 export function requireRole(familyId: number, userId: number, action: "view" | "edit" | "manage"): Role {
   const role = roleIn(familyId, userId);
-  if (!can(role, action)) throw new FamilyError("You don't have permission to do that.");
+  if (!can(role, action)) throw new FamilyError("You don’t have permission to do that.");
   return role!;
 }
 
@@ -133,7 +133,7 @@ export function updateMember(
 ) {
   requireRole(familyId, actorId, "manage");
   const current = roleIn(familyId, memberId);
-  if (!current) throw new FamilyError("That person isn't in this family.");
+  if (!current) throw new FamilyError("That person isn’t in this family.");
   if (current === "owner" && changes.role !== "owner" && ownerCount(familyId) === 1) {
     throw new FamilyError("Every family needs at least one owner. Make someone else an owner first.");
   }
@@ -146,7 +146,7 @@ export function updateMember(
 export function removeMember(familyId: number, actorId: number, memberId: number) {
   if (actorId !== memberId) requireRole(familyId, actorId, "manage");
   const current = roleIn(familyId, memberId);
-  if (!current) throw new FamilyError("That person isn't in this family.");
+  if (!current) throw new FamilyError("That person isn’t in this family.");
   if (current === "owner" && ownerCount(familyId) === 1) {
     throw new FamilyError("Every family needs at least one owner. Make someone else an owner first.");
   }
@@ -184,7 +184,7 @@ function cleanBirthdate(value: string | null): string | null {
 export function addKid(familyId: number, userId: number, input: { name: string; birthdate: string | null }): number {
   requireRole(familyId, userId, "edit");
   const name = input.name.trim();
-  if (!name) throw new FamilyError("Please enter the kid's name.");
+  if (!name) throw new FamilyError("Please enter the kid’s name.");
   const count = kidsOf(familyId).length;
   const { lastInsertRowid } = db()
     .prepare("INSERT INTO kids (family_id, name, birthdate, color) VALUES (?, ?, ?, ?)")
@@ -194,9 +194,9 @@ export function addKid(familyId: number, userId: number, input: { name: string; 
 
 export function updateKid(kidId: number, userId: number, input: { name: string; birthdate: string | null }) {
   const found = getKid(kidId, userId);
-  if (!found || !can(found.role, "edit")) throw new FamilyError("You don't have permission to do that.");
+  if (!found || !can(found.role, "edit")) throw new FamilyError("You don’t have permission to do that.");
   const name = input.name.trim();
-  if (!name) throw new FamilyError("Please enter the kid's name.");
+  if (!name) throw new FamilyError("Please enter the kid’s name.");
   db()
     .prepare("UPDATE kids SET name = ?, birthdate = ? WHERE id = ?")
     .run(name, cleanBirthdate(input.birthdate), kidId);

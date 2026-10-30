@@ -42,7 +42,7 @@ const collection = (title: string) => ({
   school: "Little Oaks",
   teacher: "Ms. Rivera",
   grade: "Preschool",
-  schoolYear: "2026–2027",
+  schoolYear: "2026-2027",
   description: null,
 });
 
@@ -120,8 +120,8 @@ describe("gallery", () => {
   });
 
   it("works out the school year", () => {
-    expect(schoolYearFor(new Date(2026, 9, 30))).toBe("2026–2027");
-    expect(schoolYearFor(new Date(2027, 4, 1))).toBe("2026–2027");
-    expect(schoolYearFor(new Date(2026, 6, 31))).toBe("2025–2026");
+    expect(schoolYearFor(new Date(2026, 9, 30))).toBe("2026-2027");
+    expect(schoolYearFor(new Date(2027, 4, 1))).toBe("2026-2027");
+    expect(schoolYearFor(new Date(2026, 6, 31))).toBe("2025-2026");
   });
 });

@@ -17,7 +17,7 @@ export default async function NewCollection({ params }: { params: Promise<{ kidI
   const { kid } = found;
   return (
     <div className="mx-auto max-w-xl">
-      <PageHeader title="New collection" subtitle={`A gallery of ${kid.name}'s art.`} back={{ href: `/kids/${kid.id}`, label: kid.name }} />
+      <PageHeader title="New collection" subtitle={`A gallery of ${kid.name}’s art.`} back={{ href: `/kids/${kid.id}`, label: kid.name }} />
       <Card>
         <ActionForm action={createCollectionAction}>
           <input type="hidden" name="kidId" value={kid.id} />

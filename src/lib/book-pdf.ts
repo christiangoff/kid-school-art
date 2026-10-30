@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { PDFDocument, rgb, StandardFonts, type PDFFont, type PDFImage, type PDFPage } from "pdf-lib";
 import sharp from "sharp";
-import type { BookPlan, Caption, Slot } from "./book-plan";
+import { coverTextColor, type BookPlan, type Caption, type Slot } from "./book-plan";
 import { collectionDetails } from "./collection-details";
 import { DATA_DIR } from "./db";
 import type { Artwork } from "./gallery";
@@ -124,6 +124,7 @@ export async function renderBookPdf(plan: BookPlan, opts: { kidName: string; col
   const cx = pw / 2;
   const scale = Math.min(plan.width, plan.height) / 8; // type grows with the page
   const accent = hexToRgb(opts.color);
+  const coverInk = hexToRgb(coverTextColor(opts.color));
 
   for (const p of plan.pages) {
     const page = doc.addPage([pw, ph]);
@@ -131,8 +132,8 @@ export async function renderBookPdf(plan: BookPlan, opts: { kidName: string; col
       page.drawRectangle({ x: 0, y: 0, width: pw, height: ph, color: accent });
       const textW = (plan.width - 1.5) * PT;
       let y = ph - (plan.bleed + 0.9) * PT;
-      y = centered(page, wrap(fonts.bold, p.title, 34 * scale, textW), fonts.bold, 34 * scale, cx, y, rgb(1, 1, 1));
-      if (p.subtitle) y = centered(page, wrap(fonts.regular, p.subtitle, 16 * scale, textW), fonts.regular, 16 * scale, cx, y - 4, rgb(1, 1, 1));
+      y = centered(page, wrap(fonts.bold, p.title, 34 * scale, textW), fonts.bold, 34 * scale, cx, y, coverInk);
+      if (p.subtitle) y = centered(page, wrap(fonts.regular, p.subtitle, 16 * scale, textW), fonts.regular, 16 * scale, cx, y - 4, coverInk);
       if (opts.coverArt) {
         const box = { w: (plan.width - 1.6) * PT, h: y - (plan.bleed + 0.8) * PT - 16 };
         const img = await doc.embedJpg(await printImage(opts.coverArt, Math.max(box.w, box.h) / PT));

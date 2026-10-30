@@ -18,7 +18,7 @@ export default async function NewFamily() {
       />
       <Card>
         <ActionForm action={createFamilyAction}>
-          <Field label="Family name" hint={'For example, "The Goff Family".'}>
+          <Field label="Family name" hint="For example, “The Goff Family”.">
             <Input name="name" required autoFocus />
           </Field>
           <SubmitButton>Create family</SubmitButton>

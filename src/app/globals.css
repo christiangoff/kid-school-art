@@ -1,16 +1,70 @@
+/* Hallmark · checked: 2026-10-30 · genre: playful (inferred: a family app about kids' art)
+ * floor: 0 FAIL · fixed: 12 (10a, 19, 20, 26a, 27, 30a, 34, 39a, 40, 49a, 63, 67) · reflex fixed: 26b, 39b, 49b, 7b · waived: 39b (picture tile), 75 · structural: 1 printed (42: page actions sit far from their title on wide screens)
+ * built: the project · redesign: polish · v2.0.0 */
+/* Hallmark · waive 39b · the only tall control is the book builder's picture tile, a button the size of the thumbnail · tapping the whole picture to leave it out is the point, so it stays as big as the art */
+/* Hallmark · waive 75 · the tiny text sits only inside the book preview thumbnails · they are a scaled miniature of the printed page and never read as copy */
 @import "tailwindcss";
 
 @theme {
+  /* Card ground: a warm near-white, so no surface is pure #fff. */
+  --color-white: #fffefb;
+  --color-black: #2b2118;
   --color-paper: #fffaf3;
   --color-ink: #2b2118;
   --color-muted: #7a6a5c;
+  /* Card and divider rules: decorative. */
   --color-line: #eadfce;
-  --color-brand: #e0612f;
-  --color-brand-dark: #b94a1f;
+  /* Field edges: 3:1 against white and paper, so inputs can be found. */
+  --color-edge: #9c8b7b;
+  /* 5.2:1 with white text, 5:1 as text on paper. */
+  --color-brand: #c2410c;
+  --color-brand-dark: #9a3412;
+  --color-focus: #1d4ed8;
+  /* Warnings and confirmations, each 7:1 or better on its own tint. */
+  --color-danger: #9f1239;
+  --color-danger-edge: #e11d48;
+  --color-danger-tint: #fff1f2;
+  --color-danger-tint-strong: #ffe4e6;
+  --color-ok: #166534;
+  --color-ok-tint: #f0fdf4;
   --font-sans: ui-rounded, "SF Pro Rounded", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+html,
+body {
+  overflow-x: clip;
 }
 
 body {
   background: var(--color-paper);
   color: var(--color-ink);
+}
+
+h1,
+h2 {
+  text-wrap: balance;
+  overflow-wrap: break-word;
+  min-width: 0;
+}
+
+/* One focus ring for every control, shown at once. */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
+  transition: none;
+}
+
+/* Pressed: every button gives under the finger. */
+button:not(:disabled):active {
+  transform: translateY(1px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
 }

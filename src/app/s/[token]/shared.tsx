@@ -2,12 +2,13 @@ import Link from "next/link";
 import type { Artwork } from "@/lib/gallery";
 import { kidName } from "@/lib/shared-view";
 import type { ShareLink } from "@/lib/sharing";
+import { Icon } from "@/components/Icon";
 
 export function ExpiredShare() {
   return (
     <div className="py-16 text-center">
-      <p className="text-4xl" aria-hidden>🔒</p>
-      <h1 className="mt-2 text-2xl font-bold">This link isn't working anymore</h1>
+      <Icon name="lock" className="mx-auto size-10 text-muted" />
+      <h1 className="mt-2 text-2xl font-bold">This link isn’t working anymore</h1>
       <p className="mt-2 text-muted">It may have expired or been turned off. Ask the person who sent it for a new one.</p>
     </div>
   );
@@ -26,10 +27,10 @@ export function SharedPiece({ token, link, art, prev, next }: {
     <div className="mx-auto max-w-4xl">
       {!link.artId && (
         <div className="mb-3 flex items-center justify-between text-sm">
-          <Link href={base} className="text-muted hover:text-ink">← All art</Link>
+          <Link href={base} className="text-muted hover:text-ink">Back to all art</Link>
           <span className="flex gap-3">
-            {prev ? <Link href={`${base}/art/${prev}`} className="font-semibold">‹ Newer</Link> : <span className="text-muted">‹ Newer</span>}
-            {next ? <Link href={`${base}/art/${next}`} className="font-semibold">Older ›</Link> : <span className="text-muted">Older ›</span>}
+            {prev ? <Link href={`${base}/art/${prev}`} className="font-semibold">Newer</Link> : <span className="text-muted">Newer</span>}
+            {next ? <Link href={`${base}/art/${next}`} className="font-semibold">Older</Link> : <span className="text-muted">Older</span>}
           </span>
         </div>
       )}
@@ -39,7 +40,7 @@ export function SharedPiece({ token, link, art, prev, next }: {
       </div>
       <div className="mt-4 text-center">
         <h1 className="text-2xl font-bold">{art.title ?? "Untitled"}</h1>
-        <p className="text-sm text-muted">By {kidName(art.kidId)}{art.madeOn && ` · ${new Date(`${art.madeOn}T00:00:00`).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}`}</p>
+        <p className="text-sm text-muted">By {kidName(art.kidId)}{art.madeOn && `, ${new Date(`${art.madeOn}T00:00:00`).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}`}</p>
         {art.note && <p className="mt-2 italic">“{art.note}”</p>}
         {link.allowDownload && (
           <a href={`${base}/img/${art.id}/original?download`} className="mt-3 inline-block text-sm font-semibold text-brand">Download original</a>

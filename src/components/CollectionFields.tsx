@@ -14,7 +14,7 @@ export function CollectionFields({ collection, schools, teachers }: {
 }) {
   return (
     <>
-      <Field label="Collection name" hint={'For example, "Preschool with Ms. Rivera" or "Fall 2026".'}>
+      <Field label="Collection name" hint="For example, “Preschool with Ms. Rivera” or “Fall 2026”.">
         <Input name="title" defaultValue={collection?.title} required autoFocus />
       </Field>
       <div className="grid gap-4 sm:grid-cols-2">

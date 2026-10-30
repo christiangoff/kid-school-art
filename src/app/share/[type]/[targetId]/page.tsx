@@ -13,7 +13,7 @@ export const dynamic = "force-dynamic";
 function resolve(type: string, id: number, userId: number) {
   if (type === "kid") {
     const f = getKid(id, userId);
-    return f && { target: { kidId: id } as ShareTarget, name: `${f.kid.name}'s page`, what: `all of ${f.kid.name}'s collections`, back: `/kids/${id}`, backLabel: f.kid.name, ...f };
+    return f && { target: { kidId: id } as ShareTarget, name: `${f.kid.name}’s page`, what: `all of ${f.kid.name}’s collections`, back: `/kids/${id}`, backLabel: f.kid.name, ...f };
   }
   if (type === "collection") {
     const f = getCollection(id, userId);
@@ -37,7 +37,7 @@ export default async function SharePage({ params }: { params: Promise<{ type: st
     <div className="mx-auto max-w-2xl space-y-6">
       <PageHeader
         title={`Share ${found.name}`}
-        subtitle="Make a read-only link for people who don't have an account, like a teacher or a friend. To share with family, invite them instead."
+        subtitle="Make a read-only link for people who don’t have an account, like a teacher or a friend. To share with family, invite them instead."
         back={{ href: found.back, label: found.backLabel }}
       />
       <Card>
@@ -45,9 +45,9 @@ export default async function SharePage({ params }: { params: Promise<{ type: st
         <ActionForm action={createShareLinkAction}>
           <input type="hidden" name="type" value={type} />
           <input type="hidden" name="targetId" value={targetId} />
-          <p className="text-sm text-muted">People with the link can see {found.what}, but can't change anything.</p>
+          <p className="text-sm text-muted">People with the link can see {found.what}, but can’t change anything.</p>
           <div className="grid gap-4 sm:grid-cols-2">
-            <Field label="Who it's for" hint="Just a note for you, like “Aunt Kim”.">
+            <Field label="Who it’s for" hint="Just a note for you, like “Aunt Kim”.">
               <Input name="label" />
             </Field>
             <Field label="Link stops working">

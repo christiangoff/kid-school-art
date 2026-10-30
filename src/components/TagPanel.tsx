@@ -29,7 +29,7 @@ export function TagPanel({ target, familyId, userId, role }: {
                 <ActionForm action={untagAction} className="inline">
                   {hidden}
                   <input type="hidden" name="userId" value={t.userId} />
-                  <button className="text-muted hover:text-red-700" aria-label={`Untag ${t.name}`}>×</button>
+                  <button className="-my-1 -mr-2 grid size-8 place-items-center rounded-full text-muted hover:bg-white hover:text-danger" aria-label={`Untag ${t.name}`}>×</button>
                 </ActionForm>
               )}
             </li>

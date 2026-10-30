@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState, useTransition } from "react";
 import { moveArtAction } from "@/app/actions";
 import { Button, Select } from "./ui";
+import { Icon } from "@/components/Icon";
 
 export type GridArt = { id: number; width: number; height: number; title: string | null };
 
@@ -62,7 +63,7 @@ export function ArtGrid({ art, kidId, collections, canEdit, linkBase = "/art", i
               </Button>
               <Button type="button" variant="secondary" onClick={() => setSelected(art.map((a) => a.id))}>Select all</Button>
               <Button type="button" variant="secondary" onClick={() => { setSelecting(false); setSelected([]); }}>Cancel</Button>
-              {error && <span className="text-sm text-red-800">{error}</span>}
+              {error && <span className="text-sm text-danger">{error}</span>}
             </>
           ) : (
             <Button type="button" variant="secondary" onClick={() => setSelecting(true)}>Select</Button>
@@ -70,7 +71,7 @@ export function ArtGrid({ art, kidId, collections, canEdit, linkBase = "/art", i
         </div>
       )}
       <div className="columns-2 gap-3 sm:columns-3 lg:columns-4">
-        {art.map((a) => {
+        {art.map((a, i) => {
           const img = (
             // eslint-disable-next-line @next/next/no-img-element
             <img
@@ -78,7 +79,8 @@ export function ArtGrid({ art, kidId, collections, canEdit, linkBase = "/art", i
               width={a.width}
               height={a.height}
               alt={a.title ?? "Artwork"}
-              loading="lazy"
+              loading={i === 0 ? "eager" : "lazy"}
+              fetchPriority={i === 0 ? "high" : "auto"}
               className="h-auto w-full rounded-xl bg-line/40"
             />
           );
@@ -94,12 +96,12 @@ export function ArtGrid({ art, kidId, collections, canEdit, linkBase = "/art", i
                 >
                   {img}
                   <span className={`absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-full border-2 border-white text-xs text-white ${isSelected ? "bg-brand" : "bg-black/30"}`}>
-                    {isSelected && "✓"}
+                    {isSelected && <Icon name="check" className="size-4" />}
                   </span>
                 </button>
               ) : (
                 <Link href={`${linkBase}/${a.id}`} className="group block">
-                  <div className="overflow-hidden rounded-xl transition group-hover:shadow-md">{img}</div>
+                  <div className="overflow-hidden rounded-xl transition-shadow group-hover:shadow-md">{img}</div>
                   {a.title && <p className="mt-1 truncate text-sm">{a.title}</p>}
                 </Link>
               )}

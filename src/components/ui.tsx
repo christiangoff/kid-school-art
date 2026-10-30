@@ -2,15 +2,15 @@ import Link from "next/link";
 import type { ComponentProps, ReactNode } from "react";
 
 const buttonStyles = {
-  primary: "bg-brand text-white hover:bg-brand-dark",
-  secondary: "bg-white text-ink border border-line hover:bg-paper",
-  danger: "bg-white text-red-700 border border-red-200 hover:bg-red-50",
+  primary: "bg-brand text-white hover:bg-brand-dark active:bg-brand-dark",
+  secondary: "bg-white text-ink border border-edge hover:bg-paper active:bg-line",
+  danger: "bg-white text-danger border border-danger-edge hover:bg-danger-tint active:bg-danger-tint-strong",
 };
 
 type Variant = keyof typeof buttonStyles;
 
 function buttonClass(variant: Variant, className = "") {
-  return `inline-flex items-center justify-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition disabled:opacity-50 ${buttonStyles[variant]} ${className}`;
+  return `inline-flex min-h-10 items-center justify-center gap-2 whitespace-nowrap rounded-full px-4 py-2 text-sm font-semibold transition-colors active:translate-y-px disabled:cursor-not-allowed disabled:border-line disabled:bg-line disabled:text-muted ${buttonStyles[variant]} ${className}`;
 }
 
 export function Button({ variant = "primary", className, ...props }: ComponentProps<"button"> & { variant?: Variant }) {
@@ -34,8 +34,8 @@ export function PageHeader({ title, subtitle, actions, back }: {
   return (
     <div className="mb-6">
       {back && (
-        <Link href={back.href} className="text-sm text-muted hover:text-ink">
-          ← {back.label}
+        <Link href={back.href} className="inline-block max-w-full truncate align-bottom text-sm text-muted hover:text-ink">
+          Back to {back.label}
         </Link>
       )}
       <div className="mt-1 flex flex-wrap items-end justify-between gap-3">
@@ -60,7 +60,7 @@ export function Field({ label, hint, children }: { label: string; hint?: string;
 }
 
 export const inputClass =
-  "w-full rounded-xl border border-line bg-white px-3 py-2 text-base outline-none focus:border-brand focus:ring-2 focus:ring-brand/20";
+  "w-full rounded-xl border border-edge bg-white px-3 py-2 text-base focus:border-brand";
 
 export function Input(props: ComponentProps<"input">) {
   return <input className={inputClass} {...props} />;

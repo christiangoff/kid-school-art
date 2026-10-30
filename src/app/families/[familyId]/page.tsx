@@ -4,6 +4,7 @@ import { ButtonLink, Card, KidAvatar, PageHeader } from "@/components/ui";
 import { can, getFamily, kidsOf, membersOf, ROLE_LABELS } from "@/lib/families";
 import { requireUser } from "@/lib/session";
 import { ageLabel } from "@/lib/format";
+import { Icon } from "@/components/Icon";
 
 export const dynamic = "force-dynamic";
 
@@ -19,7 +20,7 @@ export default async function FamilyPage({ params }: { params: Promise<{ familyI
     <>
       <PageHeader
         title={family.name}
-        subtitle={`${kids.length} ${kids.length === 1 ? "kid" : "kids"} · ${members.length} ${members.length === 1 ? "person" : "people"}`}
+        subtitle={`${kids.length} ${kids.length === 1 ? "kid" : "kids"}, ${members.length} ${members.length === 1 ? "person" : "people"}`}
         actions={
           <>
             {can(family.role, "edit") && <ButtonLink href={`/families/${family.id}/kids/new`}>Add a kid</ButtonLink>}
@@ -32,12 +33,12 @@ export default async function FamilyPage({ params }: { params: Promise<{ familyI
 
       {kids.length === 0 ? (
         <Card className="py-12 text-center">
-          <p className="text-4xl" aria-hidden>🎨</p>
+          <Icon name="palette" className="mx-auto size-10 text-muted" />
           <h2 className="mt-2 text-xl font-bold">No kids yet</h2>
           <p className="mt-1 text-muted">
             {can(family.role, "edit")
               ? "Add each kid to give them their own page for art."
-              : "A parent in this family hasn't added any kids yet."}
+              : "A parent in this family hasn’t added any kids yet."}
           </p>
           {can(family.role, "edit") && (
             <ButtonLink href={`/families/${family.id}/kids/new`} className="mt-4">
@@ -49,7 +50,7 @@ export default async function FamilyPage({ params }: { params: Promise<{ familyI
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {kids.map((kid) => (
             <Link key={kid.id} href={`/kids/${kid.id}`}>
-              <Card className="flex items-center gap-4 transition hover:shadow-md">
+              <Card className="flex items-center gap-4 transition-shadow hover:shadow-md">
                 <KidAvatar name={kid.name} color={kid.color} size="lg" />
                 <div>
                   <h2 className="text-xl font-bold">{kid.name}</h2>
@@ -62,12 +63,12 @@ export default async function FamilyPage({ params }: { params: Promise<{ familyI
       )}
 
       <section className="mt-10">
-        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted">Family</h2>
+        <h2 className="mb-3 text-lg font-bold">Family</h2>
         <div className="flex flex-wrap gap-2">
           {members.map((m) => (
             <span key={m.userId} className="rounded-full border border-line bg-white px-3 py-1 text-sm">
               {m.name}
-              <span className="text-muted"> · {m.relationship ?? ROLE_LABELS[m.role]}</span>
+              <span className="block text-muted">{m.relationship ?? ROLE_LABELS[m.role]}</span>
             </span>
           ))}
         </div>
