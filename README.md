@@ -15,7 +15,7 @@ Each kid gets their own page. Families invite grandparents and other relatives w
 1. **Foundation and families** (done): accounts, families, kids, invites, and roles.
 2. **Kid pages and galleries** (done): collections tagged by school, teacher, year, and grade, with uploads from a scanner, phone camera, drag-and-drop, or bulk import.
 3. **Sharing** (done): tag family members on art, plus read-only share links that can be revoked or expire.
-4. **Year-end books**: print-ready PDF layouts and integrations with print services.
+4. **Year-end books** (started): a book builder with print-ready PDF and photo pack exports. Ordering directly through a print API, such as Lulu's, could come next.
 
 ## Adding art
 
@@ -34,6 +34,15 @@ iPhone HEIC photos can't be read yet. Safari converts them when you upload, or y
 
 - **Tag family:** on any piece or collection, tag people in the family, with an optional note. It shows up on their **For you** page, with a badge in the header until they've looked.
 - **Share links:** parents and owners can use **Share** on a kid, collection, or piece to make a read-only link for someone without an account, like a teacher or a friend. Each link can expire after a week, a month, three months, or a year, or never, and can optionally allow downloading the originals. You can see how often each link was opened and turn any of them off under **Manage family**.
+
+## Year-end books
+
+On a kid's page, **Make a book** turns collections into a book. Choose the size (8×8, 8.5×8.5, 12×12, 8.5×11, 11×8.5, or 10×8), the layout (one, two, or four pieces per page), and what goes under each piece (title, what they said, date and age). You can also add a dedication. In the builder you can reorder collections, leave pieces out, and pick the cover.
+
+Downloads:
+
+- **Print-ready PDF:** a cover, a title page for each collection, then the art. Bleed (⅛") is on by default for print services like Blurb, Lulu, or a print shop; turn it off for home printing. A padded version adds blank pages up to the 20-page minimum most photo books need.
+- **Photo pack:** numbered, full-resolution JPEGs in book order plus `captions.txt`, for services that only take photos into their own editor (Shutterfly, Mixbook, Artifact Uprising).
 
 ## Develop on the Mac
 

@@ -6,6 +6,7 @@ import { ButtonLink, Card, KidAvatar, PageHeader } from "@/components/ui";
 import { Uploader } from "@/components/Uploader";
 import { can, getFamily, getKid } from "@/lib/families";
 import { ageLabel } from "@/lib/format";
+import { booksFor, BOOK_SIZES } from "@/lib/books";
 import { artFor, collectionsFor } from "@/lib/gallery";
 import { requireUser } from "@/lib/session";
 
@@ -28,6 +29,7 @@ export default async function KidPage({ params }: { params: Promise<{ kidId: str
   const edit = can(role, "edit");
   const collections = collectionsFor(kid.id);
   const unsorted = artFor(kid.id, "unsorted");
+  const books = booksFor(kid.id);
 
   return (
     <>
@@ -92,6 +94,33 @@ export default async function KidPage({ params }: { params: Promise<{ kidId: str
             </Link>
           ))}
         </div>
+      )}
+
+      {(edit || books.length > 0) && collections.length > 0 && (
+        <section className="mt-10">
+          <div className="mb-3 flex flex-wrap items-end justify-between gap-2">
+            <div>
+              <h2 className="text-xl font-bold">Year-end books</h2>
+              <p className="text-sm text-muted">Turn collections into a book to print.</p>
+            </div>
+            {edit && <ButtonLink href={`/kids/${kid.id}/books/new`} variant="secondary">Make a book</ButtonLink>}
+          </div>
+          {books.length > 0 && (
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {books.map((b) => (
+                <Link key={b.id} href={`/books/${b.id}`}>
+                  <Card className="flex items-center gap-3 p-4 transition hover:shadow-md">
+                    <span className="text-3xl" aria-hidden>📕</span>
+                    <span>
+                      <span className="block font-bold">{b.title}</span>
+                      <span className="text-sm text-muted">{BOOK_SIZES[b.size].label} · {b.pieceCount} pieces</span>
+                    </span>
+                  </Card>
+                </Link>
+              ))}
+            </div>
+          )}
+        </section>
       )}
 
       {(edit || unsorted.length > 0) && (

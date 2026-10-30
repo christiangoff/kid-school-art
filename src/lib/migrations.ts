@@ -132,4 +132,40 @@ export const migrations: string[] = [
   );
   CREATE INDEX share_links_family ON share_links(family_id);
   `,
+  `
+  -- A year-end book for one kid, made from some of their collections.
+  CREATE TABLE books (
+    id INTEGER PRIMARY KEY,
+    kid_id INTEGER NOT NULL REFERENCES kids(id) ON DELETE CASCADE,
+    title TEXT NOT NULL,
+    subtitle TEXT,
+    size TEXT NOT NULL,
+    layout TEXT NOT NULL,
+    bleed INTEGER NOT NULL DEFAULT 1,
+    show_title INTEGER NOT NULL DEFAULT 1,
+    show_note INTEGER NOT NULL DEFAULT 1,
+    show_date INTEGER NOT NULL DEFAULT 1,
+    cover_art_id INTEGER REFERENCES artworks(id) ON DELETE SET NULL,
+    dedication TEXT,
+    created_by INTEGER REFERENCES users(id) ON DELETE SET NULL,
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+  );
+
+  CREATE TABLE book_collections (
+    book_id INTEGER NOT NULL REFERENCES books(id) ON DELETE CASCADE,
+    collection_id INTEGER NOT NULL REFERENCES collections(id) ON DELETE CASCADE,
+    position INTEGER NOT NULL,
+    PRIMARY KEY (book_id, collection_id)
+  );
+
+  -- Pieces left out of a book, so new art added to a collection shows up by default.
+  CREATE TABLE book_excluded_art (
+    book_id INTEGER NOT NULL REFERENCES books(id) ON DELETE CASCADE,
+    art_id INTEGER NOT NULL REFERENCES artworks(id) ON DELETE CASCADE,
+    PRIMARY KEY (book_id, art_id)
+  );
+
+  CREATE INDEX books_kid ON books(kid_id);
+  `,
 ];
